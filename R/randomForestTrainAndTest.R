@@ -4,9 +4,9 @@
 #' this mtry value. This function is also the core of each randomForestCV() iteration. \strong{Important:} input
 #' matrix/dataframe should include the response vector as a column.
 #'
-#' @param df.train Train dataset. A dataframe of observations as rows and features as columns. \strong{Important:} input
+#' @param train Train dataset. A dataframe of observations as rows and features as columns. \strong{Important:} input
 #' matrix/dataframe should include the response vector as a column.
-#' @param df.test Test dataset. A dataframe of observations as rows and features as columns. \strong{Important:} input
+#' @param test Test dataset. A dataframe of observations as rows and features as columns. \strong{Important:} input
 #' matrix/dataframe should include the response vector as a column.
 #' @param colname.response The name of a column containing the response classes.
 #' @param balance Balancing of classes by simple up/down sampling.
@@ -34,7 +34,7 @@
 #' @export
 #'
 
-randomForestTrainAndTest <- function(df.train, df.test, colname.response, balance = F, incl.expected.response = T,
+randomForestTrainAndTest <- function(train, test, colname.response, balance = F, incl.expected.response = T,
 
                                      ## randomForest::tuneRF() args
                                      ntreeTry = 500, stepFactor = 1.2, improve = 0.001, plot = F, trace = F,
@@ -47,14 +47,14 @@ randomForestTrainAndTest <- function(df.train, df.test, colname.response, balanc
 {
    ## Up/down balance classes
    if(balance == T | balance == 'up'){
-      df.train <- balanceClasses(df.train, colname.response, scaling = 'up')
+      train <- balanceClasses(train, colname.response, scaling = 'up')
    } else if (balance == 'down'){
-      df.train <- balanceClasses(df.train, colname.response, scaling = 'down')
+      train <- balanceClasses(train, colname.response, scaling = 'down')
    }
 
    ## Get mtry where OOBE is min
-   mtryTune <- tuneRF(x = df.train %>% .[,colnames(.) != colname.response], #df of features/observations
-                      y = df.train %>% .[,colname.response], ## vector of expected response
+   mtryTune <- tuneRF(x = train %>% .[,colnames(.) != colname.response], #df of features/observations
+                      y = train %>% .[,colname.response], ## vector of expected response
                       ntreeTry=ntreeTry,
                       stepFactor=stepFactor,
                       improve=improve,
@@ -68,19 +68,19 @@ randomForestTrainAndTest <- function(df.train, df.test, colname.response, balanc
       .[length(.)] ## always select the highest mtry
 
    ## Fit RF model
-   RF <- randomForest(x = df.train %>% .[,colnames(.) != colname.response],
-                      y = df.train %>% .[,colname.response],
+   RF <- randomForest(x = train %>% .[,colnames(.) != colname.response],
+                      y = train %>% .[,colname.response],
                       ntree = randomForest.ntree,
                       importance = importance,
                       mtry = mtryBest,
                       ...)
 
    ## Predict on test set
-   pred <- predict(object = RF, newdata = df.test[,colnames(df.test) != 'response'], type = "prob")
+   pred <- predict(object = RF, newdata = test[,colnames(test) != 'response'], type = "prob")
    pred <- pred %>% as.data.frame()
 
    if(incl.expected.response == T){
-      pred$response <- df.test[,colname.response]
+      pred$response <- test[,colname.response]
    }
 
    ## Return RF and prediction object

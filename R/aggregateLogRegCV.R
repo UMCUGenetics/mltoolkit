@@ -21,14 +21,14 @@ aggregateLogRegCV <- function(logRegCV.object, var)
 {
    ## lambda
    if(var == 'lambda.1se'){
-      output <- sapply(logRegCV.object, function(fold){ fold$cv.inner[['lambda.1se']] })
+      output <- sapply(logRegCV.object, function(fold){ fold$logReg[['lambda.1se']] })
    } else if (var == 'lambda.min'){
-      output <- sapply(logRegCV.object, function(fold){ fold$cv.inner[['lambda.min']] })
+      output <- sapply(logRegCV.object, function(fold){ fold$logReg[['lambda.min']] })
    }
 
    ## coef
    else if(var == 'coef'){
-      output <- lapply(logRegCV.object, function(fold){ fold$cv.inner %>% coef() }) %>% do.call(cbind,.)
+      output <- lapply(logRegCV.object, function(fold){ fold$logReg %>% coef() }) %>% do.call(cbind,.)
    }
 
    ## pred

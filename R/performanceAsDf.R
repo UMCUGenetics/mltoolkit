@@ -17,6 +17,10 @@ performanceAsDf <- function(probs.predicted, logicals.expected, metrics=c('tpr',
    if(length(probs.predicted) != length(logicals.expected)){
       stop('probs.predicted and logicals.expected must be of the same length')
    }
+   
+   if( !all(logicals.expected %in% c(0,1,TRUE,FALSE)) ) {
+      stop('probs.predicted must be a vector of logicals (TRUE/FALSE or 0/1)')
+   }
 
    ROCRPred <- ROCR::prediction(probs.predicted, logicals.expected)
 

@@ -17,11 +17,6 @@ integrateDiscrete <- function(x, y)
       stop('x must have the same number of elements as y')
    }
 
-   x <- df_aucCalc$tpr
-   y <- df_aucCalc$ppv
-
-   ## (x2 - x1) * (y1 + y2)/2
-
    m <- cbind(x,y)
 
    sapply(1:(nrow(m)-1),function(i){

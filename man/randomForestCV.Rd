@@ -4,7 +4,7 @@
 \alias{randomForestCV}
 \title{Random forest k-fold cross-validation}
 \usage{
-randomForestCV(df, colname.response, k = 10, ...)
+randomForestCV(df, colname.response, k = 10, stratify = T, ...)
 }
 \arguments{
 \item{df}{A dataframe of observations as rows and features as columns. \strong{Important:} input matrix/dataframe should
@@ -14,37 +14,17 @@ include the response vector as a column.}
 
 \item{k}{Number of CV folds.}
 
-\item{...}{Other arguments that can be passed to \pkg{randomForest::tuneRF()} and \pkg{randomForest::randomForest()}.}
+\item{stratify}{Stratification ensures that all classes are present in every train/test set when splitting the
+data into k-folds (k).}
 
-\item{balance}{Balancing of classes by simple up/down sampling.}
-
-\item{incl.expected.response}{Whether to include the response vector as a column in the dataframe containing the prediction
-probabilities. This must be TRUE for the downstream statistics plots to work.}
-
-\item{ntreeTry}{From \pkg{randomForest::tuneRF()}. Number of decision trees to create when determining the optimal mtry value.}
-
-\item{stepFactor}{From \pkg{randomForest::tuneRF()}. Inflation rate of mtry for each iteration.}
-
-\item{improve}{From \pkg{randomForest::tuneRF()}. Relative improvement in out of bag error (OOBE) must be by this much for
-the search to continue.}
-
-\item{plot}{From \pkg{randomForest::tuneRF()}. Whether to plot the OOB error as function of mtry.}
-
-\item{trace}{From \pkg{randomForest::tuneRF()}. Whether to print the progress of the search}
-
-\item{randomForest.ntree}{From \pkg{randomForest::randomForest()}. Number of decision trees to create when building the
-random forest model from the training set}
-
-\item{importance}{From \pkg{randomForest::randomForest()}. Whether to return within the object created by
-randomForest::randomForest() the MeanDecreaseGini and MeanDecreaseAccuracy. This must be TRUE for the downstream importance
-plots to work.}
+\item{...}{Other arguments that can be passed to \pkg{randomForest::tuneRF()}, \pkg{randomForest::randomForest()} and
+\pkg{mltoolkit::randomForestTrainAndTest()}.}
 }
 \value{
 Returns a list of length(k), with sublists containing the random forest model trained on the train dataset and the
 prediction probabilities on the test set.
 }
 \description{
-Helper function for randomForestCV(). This function determines the best mtry on a training set, and
-subsequently creates a randomforest model with this mtry value. This function is the core of each randomForestCV()
-iteration. \strong{Important:} input matrix/dataframe should include the response vector as a column.
+Performs k-fold cross-validation using random forest as a model, and outputs a model from each fold and the
+prediction probabilities. \strong{Important:} input matrix/dataframe should include the response vector as a column.
 }
