@@ -8,41 +8,47 @@
 #' @return Returns a ggplot2 line plot
 #' @export
 
-plot_PR <- function(probs.predicted, logicals.expected, title = NULL, show.auc = T)
+plot_PR <- function(probs.predicted, logicals.expected, title = NULL, show.auc = T, auc.only = F)
 {
    df <- performanceAsDf(probs.predicted, logicals.expected, metrics=c('tpr','ppv'))
 
    ## Assign point (0,1) as first point
    df[df$tpr==0,]$ppv <- 1
-
-   PRPlot <- ggplot(data=df, aes(x=tpr, y=ppv)) +
-      geom_line() +
-      geom_hline(yintercept = 0.5, linetype=3) +
-
-      ylab('Positive predictive value') +
-      xlab('True positive rate') +
-
-      theme(plot.title = element_text(hjust = 0.5))
-
-   if( is.null(title) ){
-      PRPlot <- PRPlot + ggtitle('PR')
-   } else {
-      PRPlot <- PRPlot + ggtitle(title)
-   }
-
+   
    ## Calculate AUC
-   if(show.auc == T){
-      df_aucCalc <-
-         df[df$tpr != 1,c('tpr','ppv')] %>%
-         rbind(.,c(1,0)) ## Set (1,0) as last coordinate (set last y value to 0)
-
-      auc <- integrateDiscrete(df_aucCalc$tpr, df_aucCalc$ppv) ## No need to divide by max(x)*max(y); lims are already (1,1)
-
-      PRPlot <- PRPlot + annotate('text', x=0.5, y=min(df$ppv),
-                                  hjust = 0.5, vjust = 0.5, label=paste0('AUC-PR = ', auc %>% round(.,4)))
+   df_aucCalc <-
+      df[df$tpr != 1,c('tpr','ppv')] %>%
+      rbind(.,c(1,0)) ## Set (1,0) as last coordinate (set last y value to 0)
+   
+   auc <- integrateDiscrete(df_aucCalc$tpr, df_aucCalc$ppv) ## No need to divide by max(x)*max(y); lims are already (1,1)
+   
+   if(auc.only == T){
+      return(auc)
+   
+   } else {
+      PRPlot <- ggplot(data=df, aes(x=tpr, y=ppv)) +
+         geom_line() +
+         geom_hline(yintercept = 0.5, linetype=3) +
+         
+         ylab('Positive predictive value') +
+         xlab('True positive rate') +
+         
+         theme(plot.title = element_text(hjust = 0.5))
+      
+      if( is.null(title) ){
+         PRPlot <- PRPlot + ggtitle('PR')
+      } else {
+         PRPlot <- PRPlot + ggtitle(title)
+      }
+      
+      ## Calculate AUC
+      if(show.auc == T){
+         PRPlot <- PRPlot + annotate('text', x=0.5, y=min(df$ppv),
+                                     hjust = 0.5, vjust = 0.5, label=paste0('AUC-PR = ', auc %>% round(.,4)))
+      }
+      
+      return(PRPlot)
    }
-
-   return(PRPlot)
 }
 
 
