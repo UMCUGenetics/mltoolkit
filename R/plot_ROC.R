@@ -22,7 +22,7 @@ plot_ROC <- function(probs_predicted, logicals_expected, title=NULL, show.auc=T,
       return(auc)
    
    } else {
-      ROCPlot <- ggplot(data=df, aes(x=fpr, y=tpr)) +
+      plot <- ggplot(data=df, aes(x=fpr, y=tpr)) +
          geom_line() +
          geom_abline(intercept = 0, slope = 1, linetype=3) +
          
@@ -30,18 +30,16 @@ plot_ROC <- function(probs_predicted, logicals_expected, title=NULL, show.auc=T,
          ylab('True positive rate') +
          theme(plot.title = element_text(hjust = 0.5))
       
-      if(is.null(title)){
-         ROCPlot <- ROCPlot + ggtitle('ROC')
-      } else {
-         ROCPlot <- ROCPlot + ggtitle(title)
+      if( !is.null(title) ){
+         plot <- plot + ggtitle(title)
       }
       
       if(show.auc == T){
-         ROCPlot <- ROCPlot + annotate('text', x=0.5, y=min(df$tpr),
+         plot <- plot + annotate('text', x=0.5, y=min(df$tpr),
                                        hjust = 0.5, vjust = 0.5,
-                                       label=paste0('AUC-ROC = ', auc %>% round(.,4)))
+                                       label=paste0('AUC-ROC = ', auc %>% round(.,3)))
       }
       
-      return(ROCPlot)
+      return(plot)
    }
 }

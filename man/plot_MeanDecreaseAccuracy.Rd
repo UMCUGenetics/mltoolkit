@@ -4,16 +4,16 @@
 \alias{plot_MeanDecreaseAccuracy}
 \title{Plot MeanDecreaseAccuracy}
 \usage{
-plot_MeanDecreaseAccuracy(df.importance, title = NULL, sort = T, topn = F)
+plot_MeanDecreaseAccuracy(df, title = NULL, sort = T, topn = F)
 }
 \arguments{
-\item{df.importance}{A data.frame containing a column of feature names and a column of MeanDecreaseAccuracy values}
-
 \item{title}{User specified plot title. If unspecified, title defaults to 'Feature importance'}
 
 \item{sort}{Whether to sort the features by decreasing importance}
 
 \item{topn}{Whether to only show the top n ranked features. Depends on sort.}
+
+\item{df.importance}{A data.frame containing a column of feature names and a column of MeanDecreaseAccuracy values}
 }
 \value{
 Returns a ggplot2 scatter plot

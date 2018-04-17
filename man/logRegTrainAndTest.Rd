@@ -21,9 +21,12 @@ matrix/dataframe should include the response vector as a column.}
 
 \item{positive.response}{The name of the positive class (i.e. the class one wants to predict).}
 
-\item{standardize}{Transform each feature column by (x - mean(x))/sd(x). Standardization is done before class
-balancing. Standardization scales each feature so that the values are comparable across features. In stochastic gradient
-descent, feature scaling can improve the convergence speed of the algorithm.}
+\item{pre.transform.formula}{A character string describing the mathematical operation, e.g. 'log(x + 1)', where x is the 
+variable to transform.}
+
+\item{standardize}{Transform each feature column by (x - mean(x))/sd(x). Standardization scales each feature so that the 
+values are comparable across features. In stochastic gradient descent, feature scaling can improve the convergence speed 
+of the algorithm.}
 
 \item{na.replace}{During feature standardization, imputation of NA feature values by 'mean' or 'median'.}
 

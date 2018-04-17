@@ -20,7 +20,9 @@
 #' the search to continue.
 #' @param plot From \pkg{randomForest::tuneRF()}. Whether to plot the OOB error as function of mtry.
 #' @param trace From \pkg{randomForest::tuneRF()}. Whether to print the progress of the search.
+#' @param equal.oobe.decision If there are multiple mtry with min(OOB error), choose the highest or lowest mtry value ('max' or 'min' respectively)?
 #'
+#' @param mtry \pkg{randomForest::randomForest()}. Number of features to use for building each decision tree
 #' @param randomForest.ntree From \pkg{randomForest::randomForest()}. Number of decision trees to create when building the
 #' random forest model from the training set.
 #' @param importance From \pkg{randomForest::randomForest()}. Whether to return within the object created by
@@ -37,10 +39,10 @@
 randomForestTrainAndTest <- function(train, test, colname.response, balance = F, incl.expected.response = T,
 
                                      ## randomForest::tuneRF() args
-                                     ntreeTry = 500, stepFactor = 1.2, improve = 0.001, plot = F, trace = F,
+                                     ntreeTry = 500, stepFactor = 1.2, improve = 0.001, plot = F, trace = F, equal.oobe.decision = 'max',
 
                                      ## randomForest::randomForest() args
-                                     randomForest.ntree = 500, importance = T,
+                                     mtry = NULL, randomForest.ntree = 500, importance = T,
 
                                      ## Other
                                      ...)
@@ -53,26 +55,33 @@ randomForestTrainAndTest <- function(train, test, colname.response, balance = F,
    }
 
    ## Get mtry where OOBE is min
-   mtryTune <- tuneRF(x = train %>% .[,colnames(.) != colname.response], #df of features/observations
-                      y = train %>% .[,colname.response], ## vector of expected response
-                      ntreeTry=ntreeTry,
-                      stepFactor=stepFactor,
-                      improve=improve,
-                      plot=plot,
-                      trace=trace,
-                      ...)
+   if( is.null(mtry) ){
+      mtryTune <- tuneRF(x = train %>% .[,colnames(.) != colname.response], #df of features/observations
+                         y = train %>% .[,colname.response], ## vector of expected response
+                         ntreeTry=ntreeTry,
+                         stepFactor=stepFactor,
+                         improve=improve,
+                         plot=plot,
+                         trace=trace,
+                         ...)
 
-   mtryBest <-
-      mtryTune %>%
-      .[.[,2] == min(.[,2]),1] %>%
-      .[length(.)] ## always select the highest mtry
+      mtry <-
+         mtryTune %>%
+         .[.[,2] == min(.[,2]),1]
+
+      if(equal.oobe.decision == 'max'){
+         mtry <- mtry[length(mtry)]
+      } else if(equal.oobe.decision == 'min'){
+         mtry <- mtry[1]
+      }
+   }
 
    ## Fit RF model
    RF <- randomForest(x = train %>% .[,colnames(.) != colname.response],
                       y = train %>% .[,colname.response],
                       ntree = randomForest.ntree,
                       importance = importance,
-                      mtry = mtryBest,
+                      mtry = mtry,
                       ...)
 
    ## Predict on test set

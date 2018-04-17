@@ -5,7 +5,7 @@
 \title{Line plot of binary classification statistics}
 \usage{
 plot_performanceRates(probs.predicted, logicals.expected, metrics = c("tpr",
-  "tnr"), title = NULL, show.intersection = F)
+  "tnr"), title = NULL, show.intersection = F, intersection.only = F)
 }
 \arguments{
 \item{probs.predicted}{A numeric vector of prediction probabilities.}
@@ -19,6 +19,8 @@ binary classification statistics plots.}
 \item{title}{User specified plot title. If unspecified, the plot title defaults to the names of the statistics chosen.}
 
 \item{show.intersection}{Show the intersection of 2 performance metrics.}
+
+\item{intersection.only}{Only return the intersection value (cutoff value)}
 }
 \value{
 Returns a ggplot2 line plot

@@ -26,7 +26,7 @@ plot_PR <- function(probs.predicted, logicals.expected, title = NULL, show.auc =
       return(auc)
    
    } else {
-      PRPlot <- ggplot(data=df, aes(x=tpr, y=ppv)) +
+      plot <- ggplot(data=df, aes(x=tpr, y=ppv)) +
          geom_line() +
          geom_hline(yintercept = 0.5, linetype=3) +
          
@@ -35,19 +35,17 @@ plot_PR <- function(probs.predicted, logicals.expected, title = NULL, show.auc =
          
          theme(plot.title = element_text(hjust = 0.5))
       
-      if( is.null(title) ){
-         PRPlot <- PRPlot + ggtitle('PR')
-      } else {
-         PRPlot <- PRPlot + ggtitle(title)
+      if( !is.null(title) ){
+         plot <- plot + ggtitle(title)
       }
       
       ## Calculate AUC
       if(show.auc == T){
-         PRPlot <- PRPlot + annotate('text', x=0.5, y=min(df$ppv),
-                                     hjust = 0.5, vjust = 0.5, label=paste0('AUC-PR = ', auc %>% round(.,4)))
+         plot <- plot + annotate('text', x=0.5, y=min(df$ppv),
+                                     hjust = 0.5, vjust = 0.5, label=paste0('AUC-PR = ', auc %>% round(.,3)))
       }
       
-      return(PRPlot)
+      return(plot)
    }
 }
 
