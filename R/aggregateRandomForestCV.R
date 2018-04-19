@@ -19,11 +19,8 @@ aggregateRandomForestCV <- function(randomForestCV.object, var)
    ## MeanDecreaseAccuracy
    if(var == 'importance'){
       output <-
-         lapply(randomForestCV.object, function(i){ i$RF %>% importance(.,type=1) }) %>%
-         do.call(cbind,.) %>%
-         apply(.,1,mean)
-      output <- data.frame(feature = names(output), MeanDecreaseAccuracy = output)
-      rownames(output) <- NULL
+         lapply(randomForestCV.object, function(i){ i$RF %>% importance(.,type=1) }) %>% do.call(cbind,.) %>% as.data.frame()
+      colnames(output) <- 1:ncol(output)
    }
 
    ## Prediction probabilities
