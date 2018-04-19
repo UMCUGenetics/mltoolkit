@@ -23,20 +23,25 @@ plot_sortedPredictedProbs <- function(probs.predicted = NULL, annotation = NULL,
    
    plot <- ggplot(data = df, aes(x = index, y = probs.predicted) ) +
       ggtitle(title) +
-      xlab('Rank') +
+      xlim(NA, max(df$index)) +
+      xlab('Rank') + 
       ylab('Probability') +
-      theme(plot.title = element_text(hjust = 0.5)) +
-      
-      scale_color_discrete(name = 'Annotation')
+      theme(plot.title = element_text(hjust = 0.5),
+            panel.background = element_blank(),
+            panel.grid = element_blank(),
+            axis.line = element_line(colour = "black"))
    
    if( !is.null(annotation) ){
-      plot <- plot + geom_point(shape = 1, aes(colour = annotation) )
+      plot <- plot + 
+         geom_bar(stat = 'identity', width = 1, aes(fill = annotation) ) +
+         scale_fill_manual(name = 'Annotation', values = c("red", "grey"))
    } else {
-      plot <- plot + geom_point(shape = 1)
+      plot <- plot + 
+         geom_bar(stat = 'identity', width = 1)
    }
    
    if( !is.null(cutoff) ){
-      plot <- plot + 
+      plot <- plot +
          geom_hline(yintercept = cutoff, linetype = 2) +
          annotate('text', x=0, y=cutoff,
                   hjust = 0, vjust = -1,
