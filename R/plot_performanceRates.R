@@ -9,49 +9,49 @@
 #' binary classification statistics plots.
 #' @param title User specified plot title. If unspecified, the plot title defaults to the names of the statistics chosen.
 #' @param show.intersection Show the intersection of 2 performance metrics.
+#' @param intersection.only Only return the intersection value (cutoff value)
 #'
 #' @return Returns a ggplot2 line plot
 #' @export
 #'
-plot_performanceRates <- function(probs.predicted, logicals.expected, metrics=c('tpr','tnr'), title=NULL, show.intersection=F)
+plot_performanceRates <- function(probs.predicted, logicals.expected, metrics=c('tpr','tnr'), title = NULL, show.intersection = F, intersection.only = F)
 {
    df_melt <- performanceAsDf(probs.predicted, logicals.expected, metrics, melt = T)
-
-   perfRatesPlot <- ggplot(data=df_melt, aes(x=cutoff, y=statistic, colour=metric)) +
-      geom_line() +
-
-      xlab('Probability cutoff') +
-      ylab('Fractional value') +
-      scale_color_discrete(name='',labels = levels(df_melt$metric)) +
-
-      theme(plot.title = element_text(hjust = 0.5))
-
-   if(is.null(title)){
-      perfRatesPlot <- perfRatesPlot + ggtitle(paste('Metrics:', paste(metrics, collapse = ', ') ))
+   
+   diff_perfRate <-
+      abs(
+         df_melt[df_melt$metric == metrics[1],'statistic'] - df_melt[df_melt$metric == metrics[2],'statistic']
+      ) %>% .[!is.na(.)]
+   
+   intersection <-
+      which(diff_perfRate == min(diff_perfRate)) %>%
+      df_melt[.,'cutoff'] %>%
+      signif(.,3)
+   
+   if(intersection.only == T){
+      return(intersection)
+   
    } else {
-      perfRatesPlot <- perfRatesPlot + ggtitle(title)
+      plot <- ggplot(data=df_melt, aes(x=cutoff, y=statistic, colour=metric)) +
+         geom_line() +
+         
+         xlab('Probability cutoff') +
+         ylab('Fractional value') +
+         scale_color_discrete(name='',labels = levels(df_melt$metric)) +
+         
+         theme(plot.title = element_text(hjust = 0.5))
+      
+      if( !is.null(title) ){
+         plot <- plot + ggtitle(title)
+      }
+      
+      if(show.intersection == T){
+         plot <- plot +
+            geom_vline(xintercept = intersection,linetype = 3,colour = 'black') +
+            annotate('text', x=intersection*0.95, y=0.07, hjust = 1, vjust = 0.5, label=paste0('P = ',intersection))
+      }
+      
+      return(plot) 
    }
-
-   if( show.intersection == T & length(levels(df_melt$metric)) != 2 ){
-      stop('Intersection can only be calculated with 2 metrics')
-
-   } else if(show.intersection == T){
-
-      diff_perfRate <-
-         abs(
-            df_melt[df_melt$metric == metrics[1],'statistic'] - df_melt[df_melt$metric == metrics[2],'statistic']
-            ) %>% .[!is.na(.)]
-
-      intersection <-
-         which(diff_perfRate == min(diff_perfRate)) %>%
-         df_melt[.,'cutoff'] %>%
-         signif(.,4)
-
-      perfRatesPlot <- perfRatesPlot +
-         geom_vline(xintercept = intersection,linetype = 3,colour = 'black') +
-         annotate('text', x=intersection*0.95, y=0.07, hjust = 1, vjust = 0.5, label=paste0('P = ',intersection))
-   }
-
-   return(perfRatesPlot)
 }
 
