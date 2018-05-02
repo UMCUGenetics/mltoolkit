@@ -19,8 +19,6 @@
 
 randomForestCV <- function(df, colname.response, k = 10, stratify = T, ...)
 {
-   l_TrainTestSets <- createCvTrainTestSets(df, k = k)
-
    if(stratify == T){
       l_TrainTestSets <- createCvTrainTestSets(df, k = k, stratify.by.col = colname.response)
    } else {
