@@ -29,25 +29,5 @@ transformFeatures <- function(df, formula, colname.response = NULL){
    featureCols_transformed[,colname.response] <- responseCol
    
    return(featureCols_transformed)
-   
-   # if( is.null(colname.response) ){
-   #    featureCols <- colnames(df)
-   # } else {
-   #    featureCols <- colnames(df) %>% .[. != colname.response]
-   # }
-   # 
-   # tagValues <- lapply(featureCols, function(i){
-   #    Xsubstituted <- gsub('\\<x\\>', paste0('`',i,'`'), formula)
-   #    paste0('`',i,'`','=', Xsubstituted)
-   #    return(Xsubstituted)
-   # })
-   # 
-   # transformFunctionString <- paste0(
-   #    'transform(df, ',
-   #    paste(tagValues, collapse = ', '),
-   #    ')'
-   # )
-   # 
-   # transformFunctionString %>% parse(text = .) %>% eval()
 }
 
