@@ -35,7 +35,7 @@ plot_ROC <- function(probs_predicted, logicals_expected, title=NULL, show.auc=T,
       }
       
       if(show.auc == T){
-         plot <- plot + annotate('text', x=0.5, y=min(df$tpr),
+         plot <- plot + annotate('text', x=0.5, y=0.05,
                                        hjust = 0.5, vjust = 0.5,
                                        label=paste0('AUC-ROC = ', auc %>% round(.,3)))
       }
