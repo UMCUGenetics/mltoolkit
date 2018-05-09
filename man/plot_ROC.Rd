@@ -4,14 +4,15 @@
 \alias{plot_ROC}
 \title{Plot ROC curve}
 \usage{
-plot_ROC(probs_predicted, logicals_expected, title = NULL, showAUC = T)
+plot_ROC(probs_predicted, logicals_expected, title = NULL, show.auc = T,
+  auc.only = F)
 }
 \arguments{
 \item{probs_predicted}{A numeric vector of prediction probabilities.}
 
 \item{title}{User specified plot title. If unspecified, the plot title defaults to 'ROC'.}
 
-\item{showAUC}{Default: TRUE. Shows the AUC on the plot.}
+\item{show.auc}{Default: TRUE. Shows the AUC on the plot.}
 
 \item{logicals.expected}{A logical vector/factor stating the expected outcome of each prediction.}
 }

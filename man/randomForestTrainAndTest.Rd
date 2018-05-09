@@ -4,16 +4,16 @@
 \alias{randomForestTrainAndTest}
 \title{Random forest train and test workflow}
 \usage{
-randomForestTrainAndTest(df.train, df.test, colname.response, balance = F,
+randomForestTrainAndTest(train, test, colname.response, balance = F,
   incl.expected.response = T, ntreeTry = 500, stepFactor = 1.2,
-  improve = 0.001, plot = F, trace = F, randomForest.ntree = 500,
-  importance = T, ...)
+  improve = 0.001, plot = F, trace = F, equal.oobe.decision = "max",
+  mtry = NULL, randomForest.ntree = 500, importance = T, ...)
 }
 \arguments{
-\item{df.train}{Train dataset. A dataframe of observations as rows and features as columns. \strong{Important:} input
+\item{train}{Train dataset. A dataframe of observations as rows and features as columns. \strong{Important:} input
 matrix/dataframe should include the response vector as a column.}
 
-\item{df.test}{Test dataset. A dataframe of observations as rows and features as columns. \strong{Important:} input
+\item{test}{Test dataset. A dataframe of observations as rows and features as columns. \strong{Important:} input
 matrix/dataframe should include the response vector as a column.}
 
 \item{colname.response}{The name of a column containing the response classes.}
@@ -34,6 +34,10 @@ the search to continue.}
 \item{plot}{From \pkg{randomForest::tuneRF()}. Whether to plot the OOB error as function of mtry.}
 
 \item{trace}{From \pkg{randomForest::tuneRF()}. Whether to print the progress of the search.}
+
+\item{equal.oobe.decision}{If there are multiple mtry with min(OOB error), choose the highest or lowest mtry value ('max' or 'min' respectively)?}
+
+\item{mtry}{\pkg{randomForest::randomForest()}. Number of features to use for building each decision tree}
 
 \item{randomForest.ntree}{From \pkg{randomForest::randomForest()}. Number of decision trees to create when building the
 random forest model from the training set.}

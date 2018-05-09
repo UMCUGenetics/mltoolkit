@@ -19,8 +19,11 @@ splitDataIntoKfolds <- function(df, k=10)
    ## Create vector of nSamples per fold. Evenly distribute remainder sames to take into account if totalSamples is not
    ## a multiple of k)
    v_nSamples <- rep(nSamples,k)
-   v_nSamples[1:nRemainder] <- v_nSamples[1:nRemainder] + 1
-
+   
+   if(nRemainder != 0){
+      v_nSamples[1:nRemainder] <- v_nSamples[1:nRemainder] + 1
+   }
+   
    ## Create list with first start/end row number for each fold
    l_StartEnd <- list( c(1,v_nSamples[1]) ) ## initialize start/end row numbers list with first fold
    for(i in 2:length(v_nSamples))

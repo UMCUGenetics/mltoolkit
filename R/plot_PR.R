@@ -30,6 +30,8 @@ plot_PR <- function(probs.predicted, logicals.expected, title = NULL, show.auc =
          geom_line() +
          geom_hline(yintercept = 0.5, linetype=3) +
          
+         ylim(0,1) +
+         
          ylab('Positive predictive value') +
          xlab('True positive rate') +
          
@@ -41,7 +43,7 @@ plot_PR <- function(probs.predicted, logicals.expected, title = NULL, show.auc =
       
       ## Calculate AUC
       if(show.auc == T){
-         plot <- plot + annotate('text', x=0.5, y=min(df$ppv),
+         plot <- plot + annotate('text', x=0.5, y=0.05,
                                      hjust = 0.5, vjust = 0.5, label=paste0('AUC-PR = ', auc %>% round(.,3)))
       }
       

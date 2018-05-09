@@ -75,8 +75,11 @@ logRegTrainAndTest <- function(train, test = NULL, colname.response, positive.re
    }
 
    ## Standardize data
-   dataset <- standardizeTrainTestSets(dataset$train, dataset$test, colname.response,
-                                       na.replace = na.replace, sd.zero.bypass = sd.zero.bypass)
+   if(standardize == T){
+      dataset <- standardizeTrainTestSets(dataset$train, dataset$test, colname.response,
+                                          na.replace = na.replace, sd.zero.bypass = sd.zero.bypass)
+   }
+
    if( is.null(test) ){
       dataset <- list(train = dataset)
    }
@@ -118,6 +121,7 @@ logRegTrainAndTest <- function(train, test = NULL, colname.response, positive.re
                 type.measure = type.measure,
                 nlambda = nlambda,
                 lower.limits = lower.limits,
+                standardize = F, ## own standardization has been performed above
                 ...)
    
    ## Output

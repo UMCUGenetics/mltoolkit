@@ -30,6 +30,7 @@ aggregateLogRegCV <- function(logRegCV.object, var)
    else if(var == 'coef'){
       output <- lapply(logRegCV.object, function(fold){ fold$logReg %>% coef() }) %>% do.call(cbind,.) %>% as.matrix() %>% as.data.frame()
       colnames(output) <- 1:ncol(output)
+      class(output) <- c(class(output),'coef')
    }
 
    ## pred

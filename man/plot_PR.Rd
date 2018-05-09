@@ -4,7 +4,8 @@
 \alias{plot_PR}
 \title{Plot precision recall}
 \usage{
-plot_PR(probs.predicted, logicals.expected, title = NULL, show.auc = T)
+plot_PR(probs.predicted, logicals.expected, title = NULL, show.auc = T,
+  auc.only = F)
 }
 \arguments{
 \item{probs.predicted}{A numeric vector of prediction probabilities.}

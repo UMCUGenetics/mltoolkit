@@ -16,22 +16,18 @@
 
 transformFeatures <- function(df, formula, colname.response = NULL){
    if( is.null(colname.response) ){
-      featureCols <- colnames(df)
+      featureCols <- df
    } else {
-      featureCols <- colnames(df) %>% .[. != colname.response]
+      featureCols <- df[,colnames(df) != colname.response]
+      responseCol <- df[,colname.response]
    }
+
+   featureCols_transformed <- apply(featureCols, 2, function(x){
+      parse(text = formula) %>% eval()
+   }) %>% as.data.frame()
    
-   tagValues <- lapply(featureCols, function(i){
-      Xsubstituted <- gsub('\\<x\\>', i, formula)
-      paste0(i,'=',Xsubstituted)
-   })
+   featureCols_transformed[,colname.response] <- responseCol
    
-   transformFunctionString <- paste0(
-      'transform(df, ',
-      paste(tagValues, collapse = ', '),
-      ')'
-   )
-   
-   transformFunctionString %>% parse(text = .) %>% eval()
+   return(featureCols_transformed)
 }
 

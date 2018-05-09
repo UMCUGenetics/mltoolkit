@@ -4,13 +4,15 @@
 \alias{plot_logRegCoefs}
 \title{Plot logistic regression coefficients}
 \usage{
-plot_logRegCoefs(data, title = NULL)
+plot_logRegCoefs(df, title = NULL, final.model.coefs = NULL)
 }
 \arguments{
-\item{title}{User specified plot title. If unspecified, the plot title defaults to 'Feature weights'.}
-
 \item{df}{A dataframe/matrix with rows as features and columns as CV runs. Number of cols can be 1, to facilitate plotting
 of coefficients from a final model}
+
+\item{title}{User specified plot title. If unspecified, the plot title defaults to 'Feature weights'.}
+
+\item{final.model.coefs}{If a vector of length(features) is specified, red crosses will be added with the corresponding values}
 }
 \value{
 Returns a ggplot2 boxplot
