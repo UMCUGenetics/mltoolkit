@@ -14,6 +14,8 @@ plot_ROC(probs_predicted, logicals_expected, title = NULL, show.auc = T,
 
 \item{show.auc}{Default: TRUE. Shows the AUC on the plot.}
 
+\item{auc.only}{If TRUE, only returns the AUC value}
+
 \item{logicals.expected}{A logical vector/factor stating the expected outcome of each prediction.}
 }
 \value{

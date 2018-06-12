@@ -15,6 +15,8 @@ plot_PR(probs.predicted, logicals.expected, title = NULL, show.auc = T,
 \item{title}{User specified plot title. If unspecified, the plot title defaults to 'PR'.}
 
 \item{show.auc}{Shows the area under the under value.}
+
+\item{auc.only}{If TRUE, only returns the AUC value}
 }
 \value{
 Returns a ggplot2 line plot

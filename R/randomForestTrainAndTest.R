@@ -6,8 +6,8 @@
 #'
 #' @param train Train dataset. A dataframe of observations as rows and features as columns. \strong{Important:} input
 #' matrix/dataframe should include the response vector as a column.
-#' @param test Test dataset. A dataframe of observations as rows and features as columns. \strong{Important:} input
-#' matrix/dataframe should include the response vector as a column.
+#' @param test Test dataset. If test is NULL, no prediction will be performed. A dataframe of observations as rows and features 
+#' as columns. \strong{Important:} input matrix/dataframe should include the response vector as a column.
 #' @param colname.response The name of a column containing the response classes.
 #' @param balance Balancing of classes by simple up/down sampling.
 #' @param incl.expected.response Whether to include the response vector as a column in the dataframe containing the
@@ -36,7 +36,7 @@
 #' @export
 #'
 
-randomForestTrainAndTest <- function(train, test, colname.response, balance = F, incl.expected.response = T,
+randomForestTrainAndTest <- function(train, test = NULL, colname.response, balance = F, incl.expected.response = T,
 
                                      ## randomForest::tuneRF() args
                                      ntreeTry = 500, stepFactor = 1.2, improve = 0.001, plot = F, trace = F, equal.oobe.decision = 'max',
@@ -84,18 +84,23 @@ randomForestTrainAndTest <- function(train, test, colname.response, balance = F,
                       mtry = mtry,
                       ...)
 
-   ## Predict on test set
-   pred <- predict(object = RF, newdata = test[,colnames(test) != 'response'], type = "prob")
-   pred <- pred %>% as.data.frame()
-
-   if(incl.expected.response == T){
-      pred$response <- test[,colname.response]
-   }
-
    ## Return RF and prediction object
    rfTrainTestOut <- list()
    rfTrainTestOut$RF <-  RF
-   rfTrainTestOut$pred <- pred
-
+   
+   if(!is.null(test)){
+      ## Predict on test set
+      pred <- predict(object = RF, newdata = test[,colnames(test) != 'response'], type = "prob")
+      pred <- pred %>% as.data.frame()
+      
+      if(incl.expected.response == T){
+         pred$response <- test[,colname.response]
+      }
+      
+      rfTrainTestOut$pred <- pred
+   } else {
+      rfTrainTestOut$pred <- NA
+   }
+   
    return(rfTrainTestOut)
 }

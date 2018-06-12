@@ -4,7 +4,7 @@
 \alias{randomForestTrainAndTest}
 \title{Random forest train and test workflow}
 \usage{
-randomForestTrainAndTest(train, test, colname.response, balance = F,
+randomForestTrainAndTest(train, test = NULL, colname.response, balance = F,
   incl.expected.response = T, ntreeTry = 500, stepFactor = 1.2,
   improve = 0.001, plot = F, trace = F, equal.oobe.decision = "max",
   mtry = NULL, randomForest.ntree = 500, importance = T, ...)
@@ -13,8 +13,8 @@ randomForestTrainAndTest(train, test, colname.response, balance = F,
 \item{train}{Train dataset. A dataframe of observations as rows and features as columns. \strong{Important:} input
 matrix/dataframe should include the response vector as a column.}
 
-\item{test}{Test dataset. A dataframe of observations as rows and features as columns. \strong{Important:} input
-matrix/dataframe should include the response vector as a column.}
+\item{test}{Test dataset. If test is NULL, the train dataset will be used for prediction. A dataframe of observations as rows and features as columns. 
+\strong{Important:} input matrix/dataframe should include the response vector as a column.}
 
 \item{colname.response}{The name of a column containing the response classes.}
 

@@ -4,6 +4,7 @@
 #' @param logicals.expected A logical vector/factor stating the expected outcome of each prediction.
 #' @param title User specified plot title. If unspecified, the plot title defaults to 'ROC'.
 #' @param show.auc Default: TRUE. Shows the AUC on the plot.
+#' @param auc.only If TRUE, only returns the AUC value
 #'
 #' @return Returns a ggplot2 line plot
 #' @export

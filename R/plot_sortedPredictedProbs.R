@@ -4,6 +4,7 @@
 #' @param logicals.expected A character vector of response labels. If provided, dots will be coloured by these labels.
 #' @param cutoff If provided, a horizontal line will be drawn at the specified value to indicate the chosen cutoff.
 #' @param show.confusion Show confusion matrix?
+#' @param annotations A vector containining the desired legend names for the responses, e.g. c('BRCA proficient','BRCA deficient')
 #' @param title User specified plot title. 
 #'
 #' @return A ggplot2 scatter plot

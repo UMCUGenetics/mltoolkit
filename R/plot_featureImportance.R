@@ -4,6 +4,10 @@
 #' @param title User specified plot title. If unspecified, title defaults to 'Feature importance'
 #' @param sort Whether to sort the features by decreasing importance
 #' @param topn Whether to only show the top n ranked features. Depends on sort.
+#' @param rm.features.all.zero Remove feature columns which contain all zeroes
+#' @param final.model.imp If a vector is provided, red dashes will be added to the plot according to vector values. Used
+#' for overlaying the feature importance of the final model over feature importance as determined by cross-validation
+#' @param export.features If TRUE, only returns a vector containing the feature names
 #'
 #' @return Returns a ggplot2 scatter plot
 #' @export

@@ -4,19 +4,21 @@
 \alias{plot_sortedPredictedProbs}
 \title{Plot sorted prediction probabilities}
 \usage{
-plot_sortedPredictedProbs(probs.predicted = NULL, annotation = NULL,
-  cutoff = NULL, title = NULL, decreasing = F)
+plot_sortedPredictedProbs(probs.predicted, logicals.expected = NULL,
+  cutoff = NULL, show.confusion = T, annotations = NULL, title = NULL)
 }
 \arguments{
 \item{probs.predicted}{A numeric vector of prediction probabilities.}
 
-\item{annotation}{A character vector of response labels. If provided, dots will be coloured by these labels.}
+\item{logicals.expected}{A character vector of response labels. If provided, dots will be coloured by these labels.}
 
 \item{cutoff}{If provided, a horizontal line will be drawn at the specified value to indicate the chosen cutoff.}
 
-\item{title}{User specified plot title.}
+\item{show.confusion}{Show confusion matrix?}
 
-\item{decreasing}{Sort by decreasing?}
+\item{annotations}{A vector containining the desired legend names for the responses, e.g. c('BRCA proficient','BRCA deficient')}
+
+\item{title}{User specified plot title.}
 }
 \value{
 A ggplot2 scatter plot

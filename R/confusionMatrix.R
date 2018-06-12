@@ -3,6 +3,7 @@
 #' @param probs.predicted A numeric vector of prediction probabilities.
 #' @param logicals.expected A character vector of response labels. If provided, dots will be coloured by these labels.
 #' @param cutoff If provided, a horizontal line will be drawn at the specified value to indicate the chosen cutoff.
+#' @param as.vector Return vector or matrix?
 #'
 #' @return A vector or matrix
 #' @export
