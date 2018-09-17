@@ -1,9 +1,9 @@
 #' Convert multiclass response to binary response
 #'
 #' @param chr A character vector or factor
-#' @param p.classes Name of positive classes to convert
+#' @param p.responses Name of positive classes to convert
 #' @param p.return Name of positive class to return
-#' @param n.classes Name of negative classes to convert
+#' @param n.responses Name of negative classes to convert
 #' @param n.return Name of negative class to return
 #' @param as.factor Option to return a factor instead of character vector
 #'
@@ -15,32 +15,41 @@
 #' @return Returns a character vector or factor with only two classes
 #' @export
 #'
-#' @examples ## Convert c('BRCA1','BRCA2') to 'BRCA'. Leave 'none'  as is.
-#' toBinaryResponse(c('BRCA1', 'BRCA2', 'none'), c('BRCA1','BRCA2'), 'BRCA', 'none', 'none')
+#' @examples
+#' responses <- c('BRCA1', 'BRCA2', 'none','BRCA1','BRCA1', 'BRCA2', 'none')
+#' toBinaryResponse(responses)
 
-toBinaryResponse <- function(chr, p.classes=NULL, p.return=NULL, n.classes=NULL, n.return=NULL, as.factor = TRUE)
+toBinaryResponse <- function(chr, 
+                             p.responses = NULL, p.return = NULL, 
+                             n.responses = NULL, n.return = NULL, 
+                             as.factor = TRUE)
 {
-   if(is.null(p.classes) | is.null(n.classes)){
+   # chr = rf_agg_pred$response
+   # p.responses = c('BRCA1','BRCA2')
+   # p.return = 1
+   # n.responses = 'none'
+   # n.return = 0
+   
+   if(is.null(p.responses) & is.null(n.responses)){
       stop('Please specify positive and/or negative classes')
    }
 
    chr <- as.character(chr)
-
-   if( !is.null(p.return) ){
-      chr[chr %in% p.classes] <- p.return
-   }
-
-   if( !is.null(n.return) ){
-      chr[chr %in% n.classes] <- n.return
-   }
-
-   if( length(unique(chr)) > 2 ){
-      warning('Output response vector contains >2 classes')
-   }
+   
+   if( !is.null(p.return) ){ chr[chr %in% p.responses] <- p.return }
+   if( !is.null(n.return) ){ chr[chr %in% n.responses] <- n.return }
+   
+   if( length(unique(chr)) > 2 ){ warning('Output response vector contains >2 classes') }
 
    if(as.factor == TRUE){
-      return(as.factor(chr))
-   } else {
+      
+      out <- as.factor(chr)
+      out <- relevel(out, as.character(p.return))
+      
+      return(out)
+   } 
+   
+   else {
       return(chr)
    }
 }
