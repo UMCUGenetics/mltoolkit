@@ -40,3 +40,4 @@ aggregateRandomForestCV <- function(randomForestCV.object, var)
 
    return(output)
 }
+
