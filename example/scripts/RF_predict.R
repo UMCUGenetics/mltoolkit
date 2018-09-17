@@ -8,3 +8,5 @@ rf_model <- readRDS(model_out_path)
 predict(object = rf_model, 
         newdata = m, 
         type = "prob")
+
+#randomForestTrainAndTest()
