@@ -23,9 +23,9 @@ transformFeatures <- function(df, formula, colname.response = NULL){
    }
 
    featureCols_transformed <- apply(featureCols, 2, function(x){
-      parse(text = formula) %>% eval()
-   }) %>% as.data.frame()
-   
+      eval(parse(text = formula))
+   })
+   featureCols_transformed <- as.data.frame(featureCols_transformed)
    featureCols_transformed[,colname.response] <- responseCol
    
    return(featureCols_transformed)
