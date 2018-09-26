@@ -5,7 +5,7 @@
 #' @param balance.options A list of vectors stating the options of the base function, balanceClasses(). Vectors should be in the 
 #' format: c(target.class, scale.ratio, method)
 #'
-#' @return
+#' @return A dataframe of resampled classes according to the balance.options provided
 #' @export
 #'
 #' @examples 

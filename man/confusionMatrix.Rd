@@ -2,10 +2,9 @@
 % Please edit documentation in R/confusionMatrix.R
 \name{confusionMatrix}
 \alias{confusionMatrix}
-\title{Calculate confusion matrix}
+\title{Create confusion matrix(-ces)}
 \usage{
-confusionMatrix(probs.predicted, logicals.expected, cutoff = 0.5,
-  as.vector = F)
+confusionMatrix(probs.predicted, logicals.expected, cutoff = "all")
 }
 \arguments{
 \item{probs.predicted}{A numeric vector of prediction probabilities.}
@@ -13,12 +12,10 @@ confusionMatrix(probs.predicted, logicals.expected, cutoff = 0.5,
 \item{logicals.expected}{A character vector of response labels. If provided, dots will be coloured by these labels.}
 
 \item{cutoff}{If provided, a horizontal line will be drawn at the specified value to indicate the chosen cutoff.}
-
-\item{as.vector}{Return vector or matrix?}
 }
 \value{
 A vector or matrix
 }
 \description{
-Calculate confusion matrix
+Create confusion matrix(-ces)
 }

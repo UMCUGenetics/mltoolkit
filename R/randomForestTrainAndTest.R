@@ -112,7 +112,7 @@ randomForestTrainAndTest <- function(train, test = NULL, colname.response, incl.
    
    if(!is.null(test)){
       ## Predict on test set
-      pred <- predict(object = RF, newdata = test[,colnames(test) != 'response'], type = "prob")
+      pred <- predict(object = RF, newdata = test[,colnames(test) != colname.response], type = "prob")
       pred <- as.data.frame(pred)
       
       if(incl.expected.response == T){

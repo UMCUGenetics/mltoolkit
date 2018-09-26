@@ -4,24 +4,28 @@
 \alias{balanceClasses}
 \title{Balancing of classes by up/down sampling}
 \usage{
-balanceClasses(df, colnameResponse, scaling = "up")
+balanceClasses(df, colname.response, target.class, scale.ratio,
+  method = "simple")
 }
 \arguments{
-\item{df}{A dataframe of observations as rows and features as columns}
+\item{df}{A dataframe of samples as rows and features as columns}
 
-\item{colnameResponse}{The name of a column containing the response classes}
+\item{colname.response}{The name of a column containing the response classes}
 
-\item{scaling}{If scaling = 'up', less represented classes are sampled up (with replacement) to the highest represented class.
-If scaling = 'down', higher represented classes are sampled down to the lowest represented class.}
+\item{target.class}{The target class for which the sample size will be adjusted}
+
+\item{scale.ratio}{The amount of up/down-sampling (e.g. 2 is 2x up, 0.5 is 2x down)}
+
+\item{method}{'simple': random samples are replicated when upsampling or random samples are removed when downsampling.
+'SMOTE': synthesizes samples based on the feature values of a class (can only be used for upsampling)}
 }
 \value{
 Returns a dataframe with balanced classes
 }
 \description{
-Data has class imbalance if e.g. there are 100 BRCA deficient donors and 900 BRCA proficient donors.
-If scaling = 'up' the 100 BRCA deficient donors are up-sampled to 900. If scaling = 'down' the 900 BRCA deficient donors
-are down-sampled to 100. This function also works if there are multiple classes (i.e. response is not binary)
+Data has class imbalance if e.g. there are 100 BRCA deficient donors and 900 BRCA proficient donors. This 
+function up/down-samples a desired class.
 }
 \examples{
-balanceClasses(df, 'response', scaling = 'up')
+balanceClasses(df, 'response', 'BRCA1', 1.5, 'SMOTE')
 }

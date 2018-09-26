@@ -11,10 +11,18 @@
 #' @return A matrix or data frame
 #' @export
 #' 
-#' @examples classifierPerf(confusion, c('tpr','tnr), avg.method = 'macro')
+#' @examples classifierPerf(confusion, c('tpr','tnr'), avg.method = 'macro')
 
 classifierPerfMC <- function(confusion, metrics, avg.method = NULL, melt = F){
-
+   
+   #metrics = c('acc','pr','roc','tpr','tnr','prec')
+   
+   if(!all(metrics %in% classifierPerf.env$internalNamesOrder)){
+      invalid_metrics <- metrics[!(metrics %in% classifierPerf.env$internalNamesOrder)]
+      invalid_metrics <- paste(invalid_metrics, collapse = ', ')
+      stop(paste0('Invalid metrics have been provided: ', invalid_metrics))
+   }
+   
    metrics_sorted <- classifierPerf.env$internalNamesOrder[classifierPerf.env$internalNamesOrder %in% metrics]
    
    metrics_internal_names <- 
@@ -33,7 +41,16 @@ classifierPerfMC <- function(confusion, metrics, avg.method = NULL, melt = F){
       perfs <- apply(confusion, 1, function(row){
          classifierPerf(row, metrics = metrics)
       })
-      perfs <- t(perfs)
+      
+      if(length(metrics) == 1){ ## hack to force pre-output into matrix if metrics only has one value
+         perfs <- do.call(rbind,perfs)
+         perfs <- apply(perfs,2,as.numeric)
+         
+         rownames(perfs) <- rownames(confusion)
+         colnames(perfs) <- metrics
+      } else {
+         perfs <- t(perfs)
+      }
       
       if(is.null(avg.method)){ return(perfs) } 
       else if(avg.method == 'macro'){ return(colMeans(perfs)) }

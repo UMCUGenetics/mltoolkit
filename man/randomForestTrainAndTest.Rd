@@ -4,24 +4,36 @@
 \alias{randomForestTrainAndTest}
 \title{Random forest train and test workflow}
 \usage{
-randomForestTrainAndTest(train, test = NULL, colname.response, balance = F,
-  incl.expected.response = T, ntreeTry = 500, stepFactor = 1.2,
-  improve = 0.001, plot = F, trace = F, equal.oobe.decision = "max",
-  mtry = NULL, randomForest.ntree = 500, importance = T, ...)
+randomForestTrainAndTest(train, test = NULL, colname.response,
+  incl.expected.response = T, balance.options = NULL, p.responses = NULL,
+  p.return = NULL, n.responses = NULL, n.return = NULL, ntreeTry = 500,
+  stepFactor = 1.2, improve = 0.001, plot = F, trace = F,
+  equal.oobe.decision = "max", mtry = NULL, randomForest.ntree = 500,
+  importance = T, ...)
 }
 \arguments{
 \item{train}{Train dataset. A dataframe of observations as rows and features as columns. \strong{Important:} input
 matrix/dataframe should include the response vector as a column.}
 
-\item{test}{Test dataset. If test is NULL, the train dataset will be used for prediction. A dataframe of observations as rows and features as columns. 
-\strong{Important:} input matrix/dataframe should include the response vector as a column.}
+\item{test}{Test dataset. If test is NULL, no prediction will be performed. A dataframe of observations as rows and features 
+as columns. \strong{Important:} input matrix/dataframe should include the response vector as a column.}
 
 \item{colname.response}{The name of a column containing the response classes.}
 
-\item{balance}{Balancing of classes by simple up/down sampling.}
-
 \item{incl.expected.response}{Whether to include the response vector as a column in the dataframe containing the
 prediction probabilities. This must be TRUE for the downstream statistics plots to work.}
+
+\item{balance.options}{A list of vectors stating the options of the base function, balanceClasses(). Vectors should be in the 
+format: c(target.class, scale.ratio, method)}
+
+\item{p.responses}{Convert a multiclass problem to a binary problem. Positive and/or negative classes can be targeted with
+'p.responses'/'n.responses' (a character vector) and converted to as indicated by 'p.return'/'n.return'.}
+
+\item{p.return}{See 'p.responses'}
+
+\item{n.responses}{See 'p.responses'}
+
+\item{n.return}{See 'p.responses'}
 
 \item{ntreeTry}{From \pkg{randomForest::tuneRF()}. Number of decision trees to create when determining the optimal mtry
 value.}

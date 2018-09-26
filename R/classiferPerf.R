@@ -8,7 +8,7 @@
 #' @return A numeric vector; or matrix or data frame
 #' @export
 #' 
-#' @examples classifierPerf(confusion, c('tpr','tnr))
+#' @examples classifierPerf(confusion, c('tpr','tnr'))
 
 classifierPerf <- function(confusion, metrics, melt = F){
    
