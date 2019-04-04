@@ -55,7 +55,8 @@ classifierPerf <- function(confusion, metrics, melt = F){
             )
          })
          perfs <- do.call(rbind, perfs)
-
+         perfs$metric <- factor(perfs$metric, levels = metrics) ## Ensures ggplot legend labels are in the correct order
+         
       } else {
          perfs <- do.call(cbind, perfs)
          perfs <- cbind(cutoff = confusion[,'cutoff'], perfs)
