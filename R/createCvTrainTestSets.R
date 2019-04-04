@@ -12,8 +12,8 @@
 #'
 #' @examples createCvTrainTestSets(df, k=10, stratify.by.col = 'response')
 
-createCvTrainTestSets <- function(df, k=10, stratify.by.col = NULL)
-{
+createCvTrainTestSets <- function(df, k=10, stratify.by.col = NULL, seed = NULL)
+{  
    ## Shuffle data
    df_shuffled <- df[sample(1:nrow(df)),]
 
