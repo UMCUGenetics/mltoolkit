@@ -4,13 +4,12 @@
 \alias{transformFeatures}
 \title{Transform feature columns}
 \usage{
-transformFeatures(df, formula, colname.response = NULL)
+transformFeatures(df, FUN, colname.response = NULL)
 }
 \arguments{
 \item{df}{A dataframe of features (with or without a response column)}
 
-\item{formula}{A character string describing the mathematical operation, e.g. 'log(x + 1)', where x is the variable to 
-transform.}
+\item{FUN}{A function describing the transformation of each column}
 
 \item{colname.response}{(Optional) The name of a column containing the response classes. This can be omitted if the 
 dataframe only contains feature columns. This is useful if the response vector is a separate object.}
@@ -22,5 +21,5 @@ Returns a dataframe of transformed features
 Transform the feature columns in a dataframe while excluding the response column (if is exists)
 }
 \examples{
-transformFeatures(df, formula = 'log(x + 1)', colname.response = 'response')
+transformFeatures(df, function(x){ log10(x) }, colname.response = 'response')
 }
