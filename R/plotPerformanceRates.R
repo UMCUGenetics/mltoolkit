@@ -44,7 +44,7 @@ plotPerformanceRates <- function(confusion, metrics=c('tpr','tnr'), avg.method =
          
          xlab('Probability cutoff') + xlim(0,1) +
          ylab('Fractional value') + ylim(0,1) +
-         scale_color_discrete(name='',labels = unique(df_melt$metric)) +
+         scale_color_discrete(name='',labels = levels(df_melt$metric)) +
          
          theme(plot.title = element_text(hjust = 0.5))
       

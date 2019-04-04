@@ -24,10 +24,10 @@ plotROC <- function(confusion, title=NULL, show.auc=T, auc.only = F, avg.method 
    df <- as.data.frame(df)
    df <- df[rev(order(df$cutoff)),]
    
-   auc <- calcAuc(
-      c(0, df$fpr), 
-      c(0, df$tpr)
-   )
+   ## Add 0,0 coordinate
+   df <- rbind(c(0,0), df)
+   
+   auc <- calcAuc(df$fpr, df$tpr)
    
    if(auc.only == T){
       return(auc)
@@ -36,7 +36,7 @@ plotROC <- function(confusion, title=NULL, show.auc=T, auc.only = F, avg.method 
       plot <- ggplot(data=df, aes(x=fpr, y=tpr)) +
          geom_line() +
          geom_abline(intercept = 0, slope = 1, linetype=3) +
-         
+
          xlab('False positive rate') +
          ylab('True positive rate') +
          theme(plot.title = element_text(hjust = 0.5))

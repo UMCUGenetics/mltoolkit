@@ -23,11 +23,11 @@ plotPR <- function(confusion, title = NULL, show.auc = T, auc.only = F, avg.meth
    df <- as.data.frame(df)
    df <- df[rev(order(df$cutoff)),]
    df$ppv[is.na(df$ppv)] <- 1
-
-   auc <- calcAuc(
-      c(0, df$tpr, 1), 
-      c(1, df$ppv, 0)
-   )
+   
+   ## Add starting/ending coordinates
+   df <- rbind(c(1,0), df, c(0,1))
+   
+   auc <- calcAuc(df$tpr, df$ppv)
    
    if(auc.only == T){
       return(auc)
@@ -37,7 +37,7 @@ plotPR <- function(confusion, title = NULL, show.auc = T, auc.only = F, avg.meth
          geom_line() +
          geom_hline(yintercept = 0.5, linetype=3) +
          
-         ylim(0,1) +
+         xlim(0,1) + ylim(0,1) +
          
          ylab('Positive predictive value') +
          xlab('True positive rate') +
