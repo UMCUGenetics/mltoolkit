@@ -19,49 +19,58 @@ balanceClasses <- function(df, colname.response, target.class, scale.ratio, meth
 
    scale.ratio <- as.numeric(scale.ratio)
    
-   df_split <- list(
-      target = df[ df[, colname.response] == target.class,],
-      remainder = df[ df[, colname.response] != target.class,]
-   )
-   
    if(scale.ratio == 1){
-      stop('scale.ratio must not == 1')
-   }
-
-   targetClassFreq <- nrow(df_split$target)
-   newTargetClassFreq <- round(targetClassFreq * scale.ratio)
+      #if(show.warnings){ message('scale.ratio == 1. Returning original dataframe') }
+      return(df)
+   
+   } else {
+      df_split <- list(
+         target = df[ df[, colname.response] == target.class,],
+         remainder = df[ df[, colname.response] != target.class,]
+      )
       
-   if(method == 'simple'){
-
-      if(scale.ratio > 1){
-         sample_with_replace <- T
-      } else {
-         sample_with_replace <- F
+      # if(scale.ratio == 1){
+      #    stop('scale.ratio must not == 1')
+      # }
+      
+      targetClassFreq <- nrow(df_split$target)
+      newTargetClassFreq <- round(targetClassFreq * scale.ratio)
+      
+      if(method == 'simple'){
+         
+         if(scale.ratio > 1){
+            sample_with_replace <- T
+         } else {
+            sample_with_replace <- F
+         }
+         
+         df_split$target <- 
+            sample(1:targetClassFreq, 
+                   newTargetClassFreq, 
+                   replace = sample_with_replace) %>% df_split$target[.,]
       }
       
-      df_split$target <- 
-         sample(1:targetClassFreq, 
-                newTargetClassFreq, 
-                replace = sample_with_replace) %>% df_split$target[.,]
-   }
-   
-   if(method == 'SMOTE'){
-      if(scale.ratio <= 1){
-         stop('For method = \'SMOTE\', scale.ratio must be > 1')
-      } else {
-         scale.ratio <- (scale.ratio - 1) * 100
+      if(method == 'SMOTE'){
+         #if(scale.ratio <= 1){
+         if(scale.ratio < 1){
+            stop('For method = \'SMOTE\', scale.ratio must be > 1')
+         } else {
+            scale.ratio <- (scale.ratio - 1) * 100
+         }
+         
+         df_dummy <- df_split$remainder[1,]
+         df_dummy <- df_dummy[rep(1,targetClassFreq + 1),]
+         
+         df_SMOTE <- rbind(df_split$target,df_dummy)
+         df_SMOTE[,colname.response] <- as.factor(df_SMOTE[,colname.response])
+         
+         #SMOTE(response ~ ., df_SMOTE, perc.over = scale.ratio, perc.under = 0)
+         
+         df_split$target <- SMOTE(response ~ ., df_SMOTE, perc.over = scale.ratio, perc.under = 0)
       }
       
-      df_dummy <- df_split$remainder[1,]
-      df_dummy <- df_dummy[rep(1,targetClassFreq + 1),]
-      
-      df_SMOTE <- rbind(df_split$target,df_dummy)
-      df_SMOTE[,colname.response] <- as.factor(df_SMOTE[,colname.response])
-      
-      df_split$target <- SMOTE(response ~ ., df_SMOTE, perc.over = 100, perc.under = 0)
+      return(
+         rbind(df_split$target, df_split$remainder)
+      )
    }
-   
-   return(
-      rbind(df_split$target, df_split$remainder)
-   )
 }
