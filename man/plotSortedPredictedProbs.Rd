@@ -4,9 +4,15 @@
 \alias{plotSortedPredictedProbs}
 \title{Plot sorted prediction probabilities}
 \usage{
-plotSortedPredictedProbs(probs.predicted, logicals.expected = NULL,
-  cutoff = NULL, show.confusion = T, show.hline = T,
-  annotations = NULL, title = NULL)
+plotSortedPredictedProbs(
+  probs.predicted,
+  logicals.expected = NULL,
+  cutoff = NULL,
+  show.confusion = T,
+  show.hline = T,
+  annotations = NULL,
+  title = NULL
+)
 }
 \arguments{
 \item{probs.predicted}{A numeric vector of prediction probabilities.}

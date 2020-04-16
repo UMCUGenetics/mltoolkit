@@ -4,8 +4,14 @@
 \alias{standardizeFeature}
 \title{Feature standardization}
 \usage{
-standardizeFeature(x, na.replace = F, sd.zero.bypass = F,
-  Mean = NULL, SD = NULL, Median = NULL)
+standardizeFeature(
+  x,
+  na.replace = F,
+  sd.zero.bypass = F,
+  Mean = NULL,
+  SD = NULL,
+  Median = NULL
+)
 }
 \arguments{
 \item{x}{A numeric/integer vector.}

@@ -4,8 +4,14 @@
 \alias{toBinaryResponse}
 \title{Convert multiclass response to binary response}
 \usage{
-toBinaryResponse(chr, p.responses = NULL, p.return = NULL,
-  n.responses = NULL, n.return = NULL, as.factor = TRUE)
+toBinaryResponse(
+  chr,
+  p.responses = NULL,
+  p.return = NULL,
+  n.responses = NULL,
+  n.return = NULL,
+  as.factor = TRUE
+)
 }
 \arguments{
 \item{chr}{A character vector or factor}

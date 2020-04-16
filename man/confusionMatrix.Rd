@@ -9,9 +9,9 @@ confusionMatrix(probs.predicted, logicals.expected, cutoff = "all")
 \arguments{
 \item{probs.predicted}{A numeric vector of prediction probabilities.}
 
-\item{logicals.expected}{A character vector of response labels. If provided, dots will be coloured by these labels.}
+\item{logicals.expected}{A character vector of response labels.}
 
-\item{cutoff}{If provided, a horizontal line will be drawn at the specified value to indicate the chosen cutoff.}
+\item{cutoff}{A single or vector of classification cutoffs ranging from 0 to 1}
 }
 \value{
 A vector or matrix

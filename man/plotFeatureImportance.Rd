@@ -4,8 +4,14 @@
 \alias{plotFeatureImportance}
 \title{Plot feature importance}
 \usage{
-plotFeatureImportance(df, final.model.imp = NULL, title = NULL,
-  mid.function = "mean", sort = T, export.features = F)
+plotFeatureImportance(
+  df,
+  final.model.imp = NULL,
+  title = NULL,
+  mid.function = "mean",
+  sort = T,
+  export.features = F
+)
 }
 \arguments{
 \item{final.model.imp}{If a vector is provided, red dashes will be added to the plot according to vector values. Used
