@@ -1,15 +1,3 @@
-#' Calculate classifier performance metrics
-#'
-#' @param confusion A numeric vector or matrix or data frame. These should contain a confusion matrix for one cutoff or 
-#' confusion matrices for multiple cutoffs.
-#' @param metrics A character vector of the desired statistics. Multiple metrics can be specified.
-#' @param melt If melt = FALSE, output in wide format. If melt = TRUE, output in long format
-#' 
-#' @return A numeric vector or matrix of the selected performance metrics
-#' @export
-#' 
-#' @examples calcPerf(confusion, c('tpr','tnr'))
-
 calcPerf.env <- new.env()
 
 calcPerf.env$acc <- list(
@@ -85,7 +73,18 @@ calcPerf.env$mcc <- list(
    na.value=0
 )
 
-#calcPerf(confusion_mc$BRCA1, c('tpr','fpr','prec'))
+####################################################################################################
+#' Calculate classifier performance metrics
+#'
+#' @param confusion A numeric vector or matrix or data frame. These should contain a confusion matrix for one cutoff or 
+#' confusion matrices for multiple cutoffs.
+#' @param metrics A character vector of the desired statistics. Multiple metrics can be specified.
+#' @param melt If melt = FALSE, output in wide format. If melt = TRUE, output in long format
+#' 
+#' @return A numeric vector or matrix of the selected performance metrics
+#' @export
+#' 
+#' @examples calcPerf(confusion, c('tpr','tnr'))
 calcPerf <- function(confusion, metrics, melt=F, add.start.end.values=T){
    
    #metrics <- c("fpr", "rec", "tpr")
@@ -173,3 +172,129 @@ calcPerf <- function(confusion, metrics, melt=F, add.start.end.values=T){
 
    return(perfs)
 }
+
+####################################################################################################
+#' Calculate classifier performance metrics (multi-class)
+#'
+#' @param confusion A matrix, data frame; or a list of matrices or data frames. These should contain a confusion matrix for
+#' one cutoff or confusion matrices for multiple cutoffs.
+#' @param metrics A character vector of the desired statistics. Multiple metrics can be specified; however, usually only two are used for
+#' binary classification statistics plots.
+#' @param avg.method 'macro': Simple average. Performance metrics are calculated individually for each class, and then averaged.
+#' 'weighted': Weighted average. Similar to 'macro', except that the performance metrics for each class are weighted by the 
+#' relative contribution of each class (i.e. classes with more samples have more weighting)
+#' @param melt If melt = FALSE, output in wide format. If melt = TRUE, output in long format
+#' @return A numeric vector or matrix of the selected performance metrics
+#' @export
+#' 
+#' @examples calcPerf(confusion, c('tpr','tnr'), avg.method = 'macro')
+
+calcPerfMC <- function(confusion, metrics, avg.method = NULL, melt = F){
+   
+   #metrics = c('tpr','tnr','prec')
+   
+   # if(!all(metrics %in% calcPerf.env$internalNamesOrder)){
+   #    invalid_metrics <- metrics[!(metrics %in% calcPerf.env$internalNamesOrder)]
+   #    invalid_metrics <- paste(invalid_metrics, collapse = ', ')
+   #    stop(paste0('Invalid metrics have been provided: ', invalid_metrics))
+   # }
+   
+   # if(length(metrics) != length(metrics_internal_names)){
+   #    stop('Multiple different names for the same performance metric were provided')
+   # }
+   
+   if(is.matrix(confusion) || is.data.frame(confusion)){
+      perfs <- apply(confusion, 1, function(row){
+         calcPerf(row, metrics = metrics)
+      })
+      
+      if(length(metrics) == 1){ ## hack to force pre-output into matrix if metrics only has one value
+         perfs <- do.call(rbind,perfs)
+         perfs <- apply(perfs,2,as.numeric)
+         
+         rownames(perfs) <- rownames(confusion)
+         colnames(perfs) <- metrics
+      } else {
+         perfs <- t(perfs)
+      }
+      
+      if(is.null(avg.method)){ return(perfs) } 
+      else if(avg.method == 'macro'){ return(colMeans(perfs)) }
+      else if(avg.method == 'weighted'){
+         response_contribs <- apply(confusion, 1, function(row){
+            row['tp'] + row['fn']
+         })
+         response_contribs <- response_contribs/sum(response_contribs)
+         response_contribs <- response_contribs[rownames(confusion)]
+         
+         return( apply(perfs, 2, function(col){ col * response_contribs }) )
+      }
+   }
+   
+   if(is.list(confusion)){
+      
+      #confusion=confusion_mc
+      
+      if(is.null(avg.method)){
+         
+         perfs <- lapply(confusion, function(i){ 
+            perf_mat <- calcPerf(i, metrics = metrics) 
+            
+            if(melt){
+               perf_mat <- melt(as.data.frame(perf_mat), id.vars = 'cutoff')
+               colnames(perf_mat) <- c('cutoff', 'metric', 'value')
+            }
+            
+            return(perf_mat)
+            
+         })
+         
+         return(perfs)
+      } 
+      
+      else {
+         
+         perfs <- lapply(confusion, function(i){ calcPerf(i, metrics = metrics) })
+         
+         ## Store cutoffs generated by calcPerf (added 0 and 1 to the ends)
+         cutoffs <- perfs[[1]][,'cutoff']
+         
+         perfs <- lapply(perfs, function(i){ i[, colnames(i) != 'cutoff'] })
+         
+         if(avg.method == 'macro'){
+            out <- Reduce('+', perfs)/length(perfs)
+         } 
+         
+         else if(avg.method == 'weighted'){
+            if(is.null(responses.expected)){
+               stop('For avg.method = \'weighted\', responses.expected is required')
+            }
+            response_contribs <- sapply(confusion, function(i){
+               i[i[,'cutoff'] == 0, 'tp']
+            })
+            response_contribs <- response_contribs/sum(response_contribs)
+            response_contribs <- response_contribs[names(confusion)]
+            
+            out <- lapply(names(perfs), function(i){ 
+               perfs[[i]] * response_contribs[i]
+            })
+            
+            out <- Reduce('+', out)
+         }
+         
+         out <- cbind(cutoff = cutoffs, out)
+         
+         if(melt){
+            out <- melt(as.data.frame(out), id.vars = 'cutoff')
+            colnames(out) <- c('cutoff', 'metric', 'value')
+            
+            if(length(metrics) == 1){ out$metric <- metrics }
+         }
+         
+         return(out)
+      }
+   }
+   
+}
+
+
