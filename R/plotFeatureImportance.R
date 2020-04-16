@@ -63,6 +63,7 @@ plotFeatureImportance <- function(df, final.model.imp = NULL, title = NULL, mid.
          
          coord_flip() +
          
+         theme_bw() +
          theme(
             axis.ticks.y = element_blank(),
             panel.background = element_blank(),
