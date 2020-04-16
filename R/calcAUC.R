@@ -5,7 +5,7 @@
 #'
 #' @param x A numeric/integer vector of discrete x values
 #' @param y A numeric/integer vector of discrete y values
-#' @na.rm Remove NA's?
+#' @param na.rm Remove NA's?
 #'
 #' @return Returns the area under the curve
 #' @export
