@@ -1,2 +1,2 @@
 # mltoolkit
-MLToolKit provides complete workflows for training and cross validating a machine learning classifier (currently contains scripts for training logistic regressions and random forests).
+mltoolkit contains functions for common task in classifier training including, calculating/plotting performance and setting up cross-validations
