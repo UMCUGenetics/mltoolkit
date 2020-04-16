@@ -61,7 +61,7 @@ confusionMatrix <- function(probs.predicted, logicals.expected, cutoff='all'){
       ))
       
       m <- do.call(rbind, lapply(cutoffs, function(i){
-         c(i, getTfpn(probs.predicted, logicals.expected, thres = i) )
+         c(i, getTfpn(probs.predicted, logicals.expected, i) )
       }))
       colnames(m) <- c('cutoff','tp','tn','fp','fn')
       m <- unique(m)
