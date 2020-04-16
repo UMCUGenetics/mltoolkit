@@ -1,14 +1,3 @@
-#' Calculate compound performance metrics (e.g. roc)
-#'
-#' @param confusion A matrix or data frame with each row being a confusion matrix. The output of 
-#' confusionMatrix(probs.predicted, logicals.expected, cutoff = 'all')
-#' @param compound.metric The name of the compound metric
-#' @param avg.method How to average performance metrics in multiclass classification. Can be NULL, 
-#' 'weighted' or 'macro'
-#' @param metric.names.as.x.y If TRUE, will convert colnames: 'tpr' and 'ppv', to: 'x' and 'y'
-#' 
-#' @return A matrix of the two performance metrics that the compound metric is composed of
-#' @export
 calcPerfCompound.env <- new.env()
 
 calcPerfCompound.env$roc <- list(
@@ -59,6 +48,18 @@ calcPerfCompound.env$npv_tnr <- list(
    }
 )
 
+####################################################################################################
+#' Calculate compound performance metrics (e.g. roc)
+#'
+#' @param confusion A matrix or data frame with each row being a confusion matrix. The output of 
+#' confusionMatrix(probs.predicted, logicals.expected, cutoff = 'all')
+#' @param compound.metric The name of the compound metric
+#' @param avg.method How to average performance metrics in multiclass classification. Can be NULL, 
+#' 'weighted' or 'macro'
+#' @param metric.names.as.x.y If TRUE, will convert colnames: 'tpr' and 'ppv', to: 'x' and 'y'
+#' 
+#' @return A matrix of the two performance metrics that the compound metric is composed of
+#' @export
 calcPerfCompound <- function(confusion, compound.metric, avg.method=NULL, metric.names.as.x.y=F){
    
    #compound.metric='pr'
