@@ -32,7 +32,7 @@ getTfpn <- function(probs.predicted, logicals.expected, cutoff){
 #'
 #' @return A vector or matrix
 #' @export
-
+#' 
 confusionMatrix <- function(probs.predicted, logicals.expected, cutoff='all'){
    
    #df=preds_ss$HMF_CV
@@ -82,7 +82,7 @@ confusionMatrix <- function(probs.predicted, logicals.expected, cutoff='all'){
 #'
 #' @return A vector or matrix
 #' @export
-
+#' 
 confusionMatrixMC <- function(probs.predicted, responses.expected, cutoff='all', neg.response=NULL)
 {
    
@@ -128,7 +128,7 @@ confusionMatrixMC <- function(probs.predicted, responses.expected, cutoff='all',
          probs <- probs.predicted[,i]
          
          m <- do.call(rbind, lapply(cutoffs, function(j){ getTfpn(probs, response, j) }))
-         m <- cbind(cutoffs, m)
+         m <- cbind(cutoff=cutoffs, m)
       })
       names(out) <- responses
    }
