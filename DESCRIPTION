@@ -1,20 +1,15 @@
 Package: mltoolkit
 Type: Package
 Title: Various tools for training machine learning classifiers
-Version: 0.1.0
+Version: 1.00
 Author: Luan Nguyen
-Maintainer: The package maintainer <n.l.nguyen2@students.uu.nl>
-Description: At this moment contains tools for streamlining the training and cross-validation of logistic regression and random forest classifiers. This includes train/test workflows and plotting functions for binary classification statistics.
+Maintainer: The package maintainer <n.l.nguyen-2@umcutrecht.nl>
+Description: Contains functions for common task in classifier training including, calculating/plotting performance and setting up cross-validations
 License: MIT
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.0
 Depends:
 	ggplot2,
-	magrittr,
 	reshape2,
-	randomForest,
-	ROCR,
-	stringr,
-	gridExtra,
-	glmnet
+	stringr

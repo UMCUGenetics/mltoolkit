@@ -4,17 +4,23 @@
 \alias{toBinaryResponse}
 \title{Convert multiclass response to binary response}
 \usage{
-toBinaryResponse(chr, p.classes = NULL, p.return = NULL, n.classes = NULL,
-  n.return = NULL, as.factor = TRUE)
+toBinaryResponse(
+  chr,
+  p.responses = NULL,
+  p.return = NULL,
+  n.responses = NULL,
+  n.return = NULL,
+  as.factor = TRUE
+)
 }
 \arguments{
 \item{chr}{A character vector or factor}
 
-\item{p.classes}{Name of positive classes to convert}
+\item{p.responses}{Name of positive classes to convert}
 
 \item{p.return}{Name of positive class to return}
 
-\item{n.classes}{Name of negative classes to convert}
+\item{n.responses}{Name of negative classes to convert}
 
 \item{n.return}{Name of negative class to return}
 
@@ -33,6 +39,6 @@ If only one class is specified for Pclasses and no name is specified for Preturn
 specified in case one would like to change the name of the class. This is also the same for Nclasses/Nreturn.
 }
 \examples{
-## Convert c('BRCA1','BRCA2') to 'BRCA'. Leave 'none'  as is.
-toBinaryResponse(c('BRCA1', 'BRCA2', 'none'), c('BRCA1','BRCA2'), 'BRCA', 'none', 'none')
+responses <- c('BRCA1', 'BRCA2', 'none','BRCA1','BRCA1', 'BRCA2', 'none')
+toBinaryResponse(responses)
 }

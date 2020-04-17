@@ -4,7 +4,7 @@
 \alias{createCvTrainTestSets}
 \title{Create train and test sets for k-fold cross validation}
 \usage{
-createCvTrainTestSets(df, k = 10, stratify.by.col = NULL)
+createCvTrainTestSets(df, k = 10, stratify.by.col = NULL, seed = NULL)
 }
 \arguments{
 \item{df}{A dataframe of observations as rows and features as columns}

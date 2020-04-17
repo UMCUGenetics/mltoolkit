@@ -12,8 +12,8 @@
 #'
 #' @examples createCvTrainTestSets(df, k=10, stratify.by.col = 'response')
 
-createCvTrainTestSets <- function(df, k=10, stratify.by.col = NULL)
-{
+createCvTrainTestSets <- function(df, k=10, stratify.by.col = NULL, seed = NULL)
+{  
    ## Shuffle data
    df_shuffled <- df[sample(1:nrow(df)),]
 
@@ -25,9 +25,9 @@ createCvTrainTestSets <- function(df, k=10, stratify.by.col = NULL)
    ## Stratification
    else {
       ## Split data by column name provided by stratify.by.col
-      responseLvls <- df[,stratify.by.col] %>% as.factor() %>% levels()
+      responseLvls <-  levels(as.factor(df[,stratify.by.col]))
       l_df_strat <- lapply(responseLvls,function(lvl){
-         df_shuffled %>% .[.[,stratify.by.col] == lvl ,]
+         df_shuffled[df_shuffled[,stratify.by.col] == lvl ,]
       })
 
       ## Get train/test set per response group
@@ -42,15 +42,18 @@ createCvTrainTestSets <- function(df, k=10, stratify.by.col = NULL)
       l_TrainTest <- lapply(1:k,function(k){
          ## Avoided inner lapply loop here for for readability
          trainSet <-
-            paste0('l_TrainTestStrat[[',nResponses,']][[k]][[\'train\']]', collapse=',') %>%
-            paste0('rbind(',.,')') %>%
-            parse(text = .) %>%
-            eval()
+            eval(parse(text = 
+                        paste0('rbind(',
+                               paste0('l_TrainTestStrat[[',nResponses,']][[k]][[\'train\']]', collapse=',')
+                               ,')')
+            ))
+         
          testSet <-
-            paste0('l_TrainTestStrat[[',nResponses,']][[k]][[\'test\']]', collapse=',') %>%
-            paste0('rbind(',.,')') %>%
-            parse(text = .) %>%
-            eval()
+            eval(parse(text = 
+                          paste0('rbind(',
+                                 paste0('l_TrainTestStrat[[',nResponses,']][[k]][[\'test\']]', collapse=',')
+                                 ,')')
+            ))
          list(train = trainSet, test = testSet)
       })
 
