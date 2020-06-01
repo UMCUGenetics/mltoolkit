@@ -4,18 +4,30 @@
 \alias{createCvTrainTestSets}
 \title{Create train and test sets for k-fold cross validation}
 \usage{
-createCvTrainTestSets(df, k = 10, stratify.by.col = NULL, seed = NULL)
+createCvTrainTestSets(
+  df,
+  k = 10,
+  stratify.by.col = NULL,
+  return.data = T,
+  show.warnings = T
+)
 }
 \arguments{
 \item{df}{A dataframe of observations as rows and features as columns}
 
 \item{k}{Number of folds to split the data into}
 
-\item{stratify.by.col}{(Optional) The name of a column containing the response classes by which to stratify the data.
-Stratification ensures that all classes are present in every train/test set.}
+\item{stratify.by.col}{(Optional) The name of a column containing the 
+response classes by which to stratify the data. Stratification ensures that 
+all classes are present in every train/test set.}
+
+\item{return.data}{Return the split dataframe or only indexes}
+
+\item{show.warnings}{Show warnings?}
 }
 \value{
-A list of length(k), containing a sublist of train and test sets
+A list of length(k), containing a sublist of train and test data or 
+indexes
 }
 \description{
 Shuffles observations and splits them into k-fold train/test sets.

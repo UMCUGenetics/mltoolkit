@@ -1,24 +1,19 @@
 #' Calculate AUC
 #'
-#' @description Calculates the area under a curve (AUC) by integration via the trapezoidal rule, where discrete (x,y)
-#' coordinates are given.
+#' @description Calculates the area under a curve (AUC) by integration via the trapezoidal rule, 
+#' where discrete (x,y) coordinates are given.
 #'
-#' @param x A numeric/integer vector of discrete x values
-#' @param y A numeric/integer vector of discrete y values
+#' @param x A numeric/integer vector of discrete x axis values
+#' @param y A numeric/integer vector of discrete y axis values
 #' @param na.rm Remove NA's?
 #'
 #' @return Returns the area under the curve
 #' @export
 #'
 #' @examples calcAUC(1:10, runif(10))
-
+#'
 calcAUC <- function(x, y, na.rm = FALSE){
-   
-   # x=perf$tpr
-   # x_store=x
-   # y=perf$ppv
-   # y_store=y
-   
+
    if(length(x) != length(y)){ stop('x must have the same number of elements as y') }
    if(any(y<0)){ stop('Some values of y are < 0') }
    
@@ -43,6 +38,11 @@ calcAUC <- function(x, y, na.rm = FALSE){
       }
    }
    
+   ## Ensure values are ordered by x
+   x <- x[order(x)]
+   y <- y[order(x)]
+   
+   ## Main
    dx <- diff(x)
    yfirst <- y[-length(y)]
    ylast <- y[-1]
@@ -53,24 +53,3 @@ calcAUC <- function(x, y, na.rm = FALSE){
    return(out)
 }
 
-# calcAUC <- function(x, y)
-# {
-#    if(length(x) != length(y)){ stop('x must have the same number of elements as y') }
-#    if(any(y<0)){ stop('Some values of y are < 0') }
-#    
-#    m <- cbind(x,y)
-#    m <- m[order(m[,'x']),]
-#    
-#    sum(
-#       sapply(1:(nrow(m)-1),function(i){
-#          trapez <- m[i:(i+1),]
-#          
-#          x1 <- trapez[1,'x']
-#          x2 <- trapez[2,'x']
-#          y1 <- trapez[1,'y']
-#          y2 <- trapez[2,'y']
-#          
-#          (x2 - x1)*(y1 + y2)/2
-#       }, USE.NAMES=F)
-#    )
-# }

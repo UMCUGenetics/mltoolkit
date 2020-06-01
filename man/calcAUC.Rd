@@ -7,9 +7,9 @@
 calcAUC(x, y, na.rm = FALSE)
 }
 \arguments{
-\item{x}{A numeric/integer vector of discrete x values}
+\item{x}{A numeric/integer vector of discrete x axis values}
 
-\item{y}{A numeric/integer vector of discrete y values}
+\item{y}{A numeric/integer vector of discrete y axis values}
 
 \item{na.rm}{Remove NA's?}
 }
@@ -17,9 +17,10 @@ calcAUC(x, y, na.rm = FALSE)
 Returns the area under the curve
 }
 \description{
-Calculates the area under a curve (AUC) by integration via the trapezoidal rule, where discrete (x,y)
-coordinates are given.
+Calculates the area under a curve (AUC) by integration via the trapezoidal rule, 
+where discrete (x,y) coordinates are given.
 }
 \examples{
 calcAUC(1:10, runif(10))
+
 }
