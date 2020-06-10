@@ -39,8 +39,7 @@ calcPerf.env$fnr <- list(
 )
 
 calcPerf.env$ppv <- list(
-   labels = c('positive predictive value','ppv',
-              'precision','prec'),
+   labels = c('positive predictive value','ppv', 'precision','prec'),
    f = function(tp,tn,fp,fn){ tp / (tp + fp) },
    start.end.values=c(0,1),
    na.value=1
@@ -55,8 +54,10 @@ calcPerf.env$npv <- list(
 
 calcPerf.env$f1 <- list(
    labels = c('f1 score','f1'),
-   f = function(tp,tn,fp,fn){       
-      (tp*tn - fp*fn) / sqrt( (tp+fp) * (tp+fn) * (tn+fp) * (tn+fn) )
+   f = function(tp,tn,fp,fn){
+      prec <- tp / (tp + fp)
+      rec <- tp / (tp + fn)
+      2 * (prec*rec) / (prec+rec)
    },
    start.end.values=c(0,0),
    na.value=0
@@ -65,9 +66,7 @@ calcPerf.env$f1 <- list(
 calcPerf.env$mcc <- list(
    labels = c('matthews correlation coefficient','mcc'),
    f = function(tp,tn,fp,fn){       
-      ppv <- tp / (tp + fp)
-      tpr <- tp / (tp + fn)
-      (2 * ppv * tpr) / (ppv + tpr) 
+      (tp*tn - fp*fn) / sqrt( (tp+fp) * (tp+fn) * (tn+fp) * (tn+fn) )
    },
    start.end.values=c(0,0),
    na.value=0
@@ -89,7 +88,7 @@ calcPerf <- function(confusion, metrics, melt=F, add.start.end.values=T){
    
    #metrics <- c("fpr", "rec", "tpr")
    #confusion <- confusion$chord
-   metric_names_lookup <- lapply(calcPerf.env, function(i){ i$labels })
+   metric_names_lookup <- lapply(calcPerf.env, `[[`, 'labels')
    
    metric_internal_names <- sapply(metrics, function(i){
       names(metric_names_lookup)[ sapply(metric_names_lookup, function(j){ i %in% j }) ]
@@ -116,16 +115,22 @@ calcPerf <- function(confusion, metrics, melt=F, add.start.end.values=T){
       } else {
          names(perfs) <- NULL
       }
+      
+      return(perfs)
    
-   } else if(is.matrix(confusion) || is.data.frame(confusion)){
-      if (is.data.frame(confusion)){
-         confusion <- as.matrix(confusion)
+   } else if(is.matrix(confusion) | is.data.frame(confusion)){
+      # if (is.data.frame(confusion)){
+      #    confusion <- as.matrix(confusion)
+      # }
+      
+      if('class' %in% colnames(confusion)){
+         add.start.end.values <- FALSE
       }
       
       perfs <- lapply(metric_internal_names, function(label){
          #label='tpr'
          recipe <- calcPerf.env[[label]]
-         v <- apply(confusion,1,function(row){
+         v <- apply(confusion[,c('tp','tn','fp','fn')],1,function(row){
             #row=confusion[1,]
             value <- recipe$f( row['tp'], row['tn'], row['fp'], row['fn'] )
             if(!is.null(recipe$na.value)){ value[is.na(value)] <- recipe$na.value }
@@ -153,24 +158,33 @@ calcPerf <- function(confusion, metrics, melt=F, add.start.end.values=T){
       })
       names(perfs) <- names(metric_internal_names)
       
-      m <- do.call(cbind, perfs)
-      cutoffs <- confusion[,'cutoff']
+      df <- as.data.frame(perfs)
       
-      if(add.start.end.values){ cutoffs <- c(0,cutoffs,1) }
-      
-      m <- cbind(cutoff=cutoffs, m)
-      
-      if(melt==T){
-         m <- do.call(rbind,lapply(colnames(m)[-1], function(i){
-            data.frame(cutoff=m[,1], metric=i,value=m[,i])
-         }))
-         m$metric <- factor(m$metric, levels=metrics)
+      if('class' %in% colnames(confusion)){
+         cutoffs <- NA
+      } else {
+         cutoffs <- confusion[,'cutoff']
       }
       
-      return(m)
+      if(add.start.end.values){ 
+         cutoffs <- c(0,cutoffs,1) 
+      }
+      df <- cbind(cutoff=cutoffs, df)
+      
+      if('class' %in% colnames(confusion)){
+         df <- cbind(class=confusion[,'class'], df)
+         df$cutoff <- NULL
+      }
+      
+      if(melt==T){
+         df <- do.call(rbind,lapply(colnames(df)[-1], function(i){
+            data.frame(cutoff=df[,1], metric=i,value=df[,i])
+         }))
+         df$metric <- factor(df$metric, levels=metrics)
+      }
+      
+      return(df)
    }
-
-   return(perfs)
 }
 
 ####################################################################################################
@@ -188,23 +202,13 @@ calcPerf <- function(confusion, metrics, melt=F, add.start.end.values=T){
 #' @export
 #' 
 #' @examples calcPerf(confusion, c('tpr','tnr'), avg.method = 'macro')
-
+#'
 calcPerfMC <- function(confusion, metrics, avg.method = NULL, melt = F){
    
    #metrics = c('tpr','tnr','prec')
    
-   # if(!all(metrics %in% calcPerf.env$internalNamesOrder)){
-   #    invalid_metrics <- metrics[!(metrics %in% calcPerf.env$internalNamesOrder)]
-   #    invalid_metrics <- paste(invalid_metrics, collapse = ', ')
-   #    stop(paste0('Invalid metrics have been provided: ', invalid_metrics))
-   # }
-   
-   # if(length(metrics) != length(metrics_internal_names)){
-   #    stop('Multiple different names for the same performance metric were provided')
-   # }
-   
    if(is.matrix(confusion) || is.data.frame(confusion)){
-      perfs <- apply(confusion, 1, function(row){
+      perfs <- apply(confusion[,c('tp','tn','fp','fn')], 1, function(row){
          calcPerf(row, metrics = metrics)
       })
       
@@ -266,9 +270,6 @@ calcPerfMC <- function(confusion, metrics, avg.method = NULL, melt = F){
          } 
          
          else if(avg.method == 'weighted'){
-            if(is.null(responses.expected)){
-               stop('For avg.method = \'weighted\', responses.expected is required')
-            }
             response_contribs <- sapply(confusion, function(i){
                i[i[,'cutoff'] == 0, 'tp']
             })
