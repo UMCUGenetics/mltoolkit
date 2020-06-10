@@ -2,19 +2,14 @@
 % Please edit documentation in R/confusionMatrix.R
 \name{confusionMatrixMC}
 \alias{confusionMatrixMC}
-\title{Create confusion matrix(-ces) (multi-class)}
+\title{Create confusion matrix(-ces) multi-class}
 \usage{
-confusionMatrixMC(
-  probs.predicted,
-  responses.expected,
-  cutoff = "all",
-  neg.response = NULL
-)
+confusionMatrixMC(predicted, expected, cutoff = "all", neg.response = NULL)
 }
 \arguments{
-\item{probs.predicted}{A matrix or data frame containing the prediction probabilities of each class in each column.}
+\item{predicted}{A matrix or data frame containing the prediction probabilities of each class in each column.}
 
-\item{responses.expected}{A character vector of response labels.}
+\item{expected}{A character vector of response labels.}
 
 \item{cutoff}{A single or vector of classification cutoffs ranging from 0 to 1}
 
@@ -24,5 +19,5 @@ confusionMatrixMC(
 A vector or matrix
 }
 \description{
-Create confusion matrix(-ces) (multi-class)
+DEPRECATED; DO NOT USE
 }

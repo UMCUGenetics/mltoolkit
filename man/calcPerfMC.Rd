@@ -27,4 +27,5 @@ Calculate classifier performance metrics (multi-class)
 }
 \examples{
 calcPerf(confusion, c('tpr','tnr'), avg.method = 'macro')
+
 }
