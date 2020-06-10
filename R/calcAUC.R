@@ -13,7 +13,7 @@
 #' @examples calcAUC(1:10, runif(10))
 #'
 calcAUC <- function(x, y, na.rm = FALSE){
-
+   
    if(length(x) != length(y)){ stop('x must have the same number of elements as y') }
    if(any(y<0)){ stop('Some values of y are < 0') }
    
@@ -39,8 +39,11 @@ calcAUC <- function(x, y, na.rm = FALSE){
    }
    
    ## Ensure values are ordered by x
-   x <- x[order(x)]
-   y <- y[order(x)]
+   df <- data.frame(x,y)
+   df <- df[order(x),]
+   x <- df$x
+   y <- df$y
+   rm(df)
    
    ## Main
    dx <- diff(x)
