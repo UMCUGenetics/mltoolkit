@@ -67,15 +67,15 @@ calcPerfCompound <- function(confusion, compound.metric, avg.method=NULL, metric
    if(length(compound.metric)>1){ stop('Please provide only one compound.metric') }
    
    ## Find compount metric recipe
-   metric_names_lookup <- lapply(calcPerfCompound.env, function(i){ i$labels })
+   metric_names_lookup <- lapply(calcPerfCompound.env,`[[`,'labels')
    metric_internal_name <- names(metric_names_lookup)[ 
       sapply(metric_names_lookup, function(j){ compound.metric %in% j }) 
-      ]
+   ]
    
    recipe <- calcPerfCompound.env[[metric_internal_name]]
    
    ## Calculate the 2 relevant performance metrics
-   if( all(c('confusion.multiclass','list') %in% class(confusion)) ){
+   if( is.list(confusion) & !is.data.frame(confusion) ){
       if(is.null(avg.method)){
          stop('Please provide avg.method for aggregating multiclass performance')
       }
