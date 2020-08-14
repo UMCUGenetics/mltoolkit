@@ -42,14 +42,14 @@ calcPerf.env$ppv <- list(
    labels = c('positive predictive value','ppv', 'precision','prec'),
    f = function(tp,tn,fp,fn){ tp / (tp + fp) },
    start.end.values=c(0,1),
-   na.value=1
+   na.value=0
 )
 
 calcPerf.env$npv <- list(
    labels = c('negative predictive value','npv'),
    f = function(tp,tn,fp,fn){ tn / (tn + fn) },
    start.end.values=c(1,0),
-   na.value=1
+   na.value=0
 )
 
 calcPerf.env$f1 <- list(
