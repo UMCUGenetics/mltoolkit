@@ -113,12 +113,13 @@ createCvTrainTestSets <- function(df, k=10, stratify.by.col=NULL, return.data=T,
    
    warning_responses <- c()
    response_k_folds <- lapply(responses_split, function(i){
+      #i=responses_split[[1]]
       if(show.warnings){
          if(nrow(i) < k){
             warning_responses <<- c(warning_responses, i$response[1])
          }
       }
-      splitDataIntoKfolds(i, return.data=T, show.warnings=F)
+      splitDataIntoKfolds(i, k=k, return.data=T, show.warnings=F)
    })
    
    if(show.warnings & length(warning_responses)!=0){
@@ -154,7 +155,19 @@ createCvTrainTestSets <- function(df, k=10, stratify.by.col=NULL, return.data=T,
    }
    
    lapply(l_indexes, function(i){
-      lapply(i, function(j){ df[j,] })
+      #i=l_indexes[[1]]
+      lapply(i, function(j){ 
+         #j=i[[1]]
+         df[j,] 
+      })
    })
    
 }
+
+# df <- readRDS('/Users/lnguyen/Desktop/sample_data.rds')
+# df$response <- as.factor(df$response)
+# l <- createCvTrainTestSets(df, k=5, stratify.by.col='response')
+# lapply(l, function(i){ table(i$test$response) })
+
+
+
